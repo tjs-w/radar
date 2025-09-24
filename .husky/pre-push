@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Run type checking and build validation before pushing
+npm run type-check
+npm run build
+
+# Check for console.log statements
+node scripts/check-console-logs.js
