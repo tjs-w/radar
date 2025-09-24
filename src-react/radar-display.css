@@ -1,0 +1,14 @@
+/* Radar display CSS classes */
+.radar-visible {
+  display: block;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.3s ease;
+}
+
+.radar-hidden {
+  display: none !important;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
