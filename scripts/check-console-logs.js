@@ -5,12 +5,15 @@
  * in the src directory. It's meant to be run as part of the pre-push hook.
  */
 
-const fs = require('fs');
-const path = require('path');
-const { execSync } = require('child_process');
+import fs from 'fs';
+import path from 'path';
+import { execSync } from 'child_process';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const srcDir = path.join(__dirname, '..', 'src-react');
-const ignoredDirs = ['node_modules', 'dist', 'build'];
 
 // ANSI color codes
 const RESET = '\x1b[0m';
