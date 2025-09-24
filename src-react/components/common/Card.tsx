@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from "react";
+import React, { ReactNode, useState, useEffect } from "react";
 import styled from "styled-components";
 
 export interface CardProps {
@@ -191,6 +191,11 @@ const Card: React.FC<CardProps> = ({
 }) => {
   const [expanded, setExpanded] = useState(defaultExpanded);
 
+  // Update expanded state when defaultExpanded prop changes
+  useEffect(() => {
+    setExpanded(defaultExpanded);
+  }, [defaultExpanded]);
+
   const handleToggleExpand = () => {
     const newExpandedState = !expanded;
     setExpanded(newExpandedState);
@@ -238,21 +243,9 @@ const Card: React.FC<CardProps> = ({
               aria-expanded={expanded}
               aria-label={expanded ? "Collapse" : "Expand"}
             >
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M7 10l5 5 5-5"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
+              <span className="material-symbols-rounded">
+                {expanded ? "expand_less" : "expand_more"}
+              </span>
             </Expander>
           )}
         </HeaderRight>
