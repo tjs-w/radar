@@ -1,9 +1,8 @@
-import React from "react";
-import styled from "styled-components";
-import { useAppState } from "../../context/AppContext";
-import { useFullscreen } from "../../context/FullscreenContext";
-import Icon from "../common/Icon";
-import ScanButton from "../network/ScanButton/ScanButton";
+import React from 'react';
+import styled from 'styled-components';
+import { useAppState } from '../../context/AppContext';
+import { useFullscreen } from '../../context/FullscreenContext';
+import ScanButton from '../network/ScanButton/ScanButton';
 
 export interface HeaderProps {
   title?: string;
@@ -35,8 +34,10 @@ const Title = styled.h1`
   gap: 8px;
 `;
 
-const HeaderIcon = styled(Icon)`
-  font-size: 24px;
+const RadarLogo = styled.img`
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
 `;
 
 const ButtonContainer = styled.div`
@@ -45,27 +46,23 @@ const ButtonContainer = styled.div`
   gap: 8px;
 `;
 
-const Header: React.FC<HeaderProps> = ({
-  title = "radar",
-  isScanning = false,
-  onScan,
-}) => {
+const Header: React.FC<HeaderProps> = ({ title = 'radar', isScanning = false, onScan }) => {
   const { state, dispatch } = useAppState();
   const { isScanning: appIsScanning } = state;
   const { toggleFullscreen } = useFullscreen();
 
   const handleScan = async () => {
     if (appIsScanning) {
-      dispatch({ type: "STOP_SCAN" });
+      dispatch({ type: 'STOP_SCAN' });
     } else {
-      dispatch({ type: "START_SCAN" });
+      dispatch({ type: 'START_SCAN' });
     }
   };
 
   return (
     <HeaderContainer data-tauri-drag-region onDoubleClick={toggleFullscreen}>
       <Title data-tauri-drag-region>
-        <HeaderIcon name="radar" type="material" data-tauri-drag-region />
+        <RadarLogo src="/radar-logo.png" alt="Radar" data-tauri-drag-region />
         <span data-tauri-drag-region>{title}</span>
       </Title>
 

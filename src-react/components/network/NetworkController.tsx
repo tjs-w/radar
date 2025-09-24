@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import logger from '../../utils/logger';
 import Button from '../common/Button';
 import Icon from '../common/Icon';
-import ScanButton from './ScanButton';
+import ScanButton from './ScanButton/ScanButton';
 
 const ControllerContainer = styled.div`
   display: flex;
@@ -18,33 +18,29 @@ export interface NetworkControllerProps {
 }
 
 export const NetworkController: React.FC<NetworkControllerProps> = ({ onScanStart, onScanEnd }) => {
+  const [isScanning, setIsScanning] = useState(false);
   logger.debug('NetworkController rendered');
 
-  useEffect(() => {
-    logger.debug('NetworkController - scan toggle', { isScanning: false });
-    if (onScanStart) {
-      logger.debug('NetworkController - calling onScanStart');
-      onScanStart();
-    }
-  }, [onScanStart]);
+  const handleScanClick = () => {
+    logger.debug('NetworkController - scan clicked:', !isScanning);
 
-  useEffect(() => {
-    logger.debug('NetworkController - scan toggle', { isScanning: true });
-    if (onScanEnd) {
-      logger.debug('NetworkController - calling onScanEnd');
-      onScanEnd();
-    }
-  }, [onScanEnd]);
-
-  const handleScanToggle = (isScanning: boolean) => {
-    logger.debug('NetworkController - scan toggle:', isScanning);
-    if (isScanning) {
-      logger.debug('NetworkController - calling onScanStart');
+    if (!isScanning) {
+      logger.debug('NetworkController - starting scan');
+      setIsScanning(true);
       if (onScanStart) {
         onScanStart();
       }
+      // Auto-stop after 5 seconds (matching the ScanButton timeout)
+      setTimeout(() => {
+        logger.debug('NetworkController - auto-stopping scan');
+        setIsScanning(false);
+        if (onScanEnd) {
+          onScanEnd();
+        }
+      }, 5000);
     } else {
-      logger.debug('NetworkController - calling onScanEnd');
+      logger.debug('NetworkController - stopping scan');
+      setIsScanning(false);
       if (onScanEnd) {
         onScanEnd();
       }
@@ -53,7 +49,7 @@ export const NetworkController: React.FC<NetworkControllerProps> = ({ onScanStar
 
   return (
     <ControllerContainer>
-      <ScanButton onScanToggle={handleScanToggle} />
+      <ScanButton onClick={handleScanClick} isScanning={isScanning} />
       <Button variant="ghost" size="md" icon={<Icon name="settings" size="md" />}>
         Settings
       </Button>
