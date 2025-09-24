@@ -14,6 +14,14 @@
 
 </div>
 
+<div align="center">
+
+<img src="radar.gif" alt="Radar Demo" width="400" height="auto">
+
+_Radar in action: Discovering network services in real-time using mDNS and UPnP protocols_
+
+</div>
+
 ---
 
 ## 🚀 Features
@@ -112,6 +120,7 @@ radar/
    ```
 
 3. **Run in development mode**
+
    ```bash
    npm run tauri:dev
    ```
