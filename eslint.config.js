@@ -3,10 +3,29 @@ import js from '@eslint/js';
 export default [
   js.configs.recommended,
   {
-    files: ['src-react/**/*.{js,jsx,ts,tsx}'],
+    files: ['**/*.{js,mjs}'],
     languageOptions: {
       ecmaVersion: 2020,
       sourceType: 'module',
+      globals: {
+        // Node globals for config files
+        process: 'readonly',
+        __dirname: 'readonly',
+        __filename: 'readonly',
+        console: 'readonly',
+      },
+    },
+  },
+  {
+    files: ['src-react/**/*.{js,jsx}'],
+    languageOptions: {
+      ecmaVersion: 2020,
+      sourceType: 'module',
+      parserOptions: {
+        ecmaFeatures: {
+          jsx: true,
+        },
+      },
       globals: {
         // Browser globals
         window: 'readonly',
@@ -17,10 +36,6 @@ export default [
         clearTimeout: 'readonly',
         setInterval: 'readonly',
         clearInterval: 'readonly',
-        // Node globals for config files
-        process: 'readonly',
-        __dirname: 'readonly',
-        __filename: 'readonly',
       },
     },
     rules: {
@@ -29,11 +44,6 @@ export default [
     },
   },
   {
-    ignores: [
-      'dist/**',
-      'src-tauri/target/**',
-      'node_modules/**',
-      'coverage/**',
-    ],
+    ignores: ['dist/**', 'src-tauri/target/**', 'node_modules/**', 'coverage/**'],
   },
 ];

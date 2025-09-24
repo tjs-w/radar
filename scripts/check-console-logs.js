@@ -5,7 +5,6 @@
  * in the src directory. It's meant to be run as part of the pre-push hook.
  */
 
-import fs from 'fs';
 import path from 'path';
 import { execSync } from 'child_process';
 import { fileURLToPath } from 'url';
