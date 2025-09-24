@@ -217,6 +217,9 @@ const NetworkHostGroup: React.FC<NetworkHostGroupProps> = ({ name, services }) =
     return Array.from(hostsMap.values());
   }, [services, ipToHostnameMap]);
 
+  // State for section-level collapse
+  const [sectionCollapsed, setSectionCollapsed] = useState(false);
+
   // Use a single state variable to track whether all cards should be expanded
   const [allCollapsed, setAllCollapsed] = useState(true);
 
@@ -230,6 +233,11 @@ const NetworkHostGroup: React.FC<NetworkHostGroupProps> = ({ name, services }) =
     setAllCollapsed(false);
   };
 
+  // Function to toggle section collapse
+  const handleSectionToggle = () => {
+    setSectionCollapsed(!sectionCollapsed);
+  };
+
   if (services.length === 0) {
     return null;
   }
@@ -238,6 +246,18 @@ const NetworkHostGroup: React.FC<NetworkHostGroupProps> = ({ name, services }) =
     <Group>
       <Heading>
         <HeadingLeft>
+          <ActionButton
+            onClick={handleSectionToggle}
+            title={sectionCollapsed ? "Expand section" : "Collapse section"}
+            aria-label={sectionCollapsed ? "Expand section" : "Collapse section"}
+            type="button"
+          >
+            <Icon
+              name={sectionCollapsed ? "expand_more" : "expand_less"}
+              type="material"
+              size="sm"
+            />
+          </ActionButton>
           <GroupName>{name}</GroupName>
           <ServiceCount>{hosts.length}</ServiceCount>
         </HeadingLeft>
@@ -265,37 +285,38 @@ const NetworkHostGroup: React.FC<NetworkHostGroupProps> = ({ name, services }) =
         </HeadingRight>
       </Heading>
 
-      <HostsGrid>
-        {hosts.map(host => {
-          // Count TCP and UDP ports
-          const tcpServices = host.services.filter(s => !s.name.includes('/udp'));
-          const udpServices = host.services.filter(s => s.name.includes('/udp'));
+      {!sectionCollapsed && (
+        <HostsGrid>
+          {hosts.map(host => {
+            // Count TCP and UDP ports
+            const tcpServices = host.services.filter(s => !s.name.includes('/udp'));
+            const udpServices = host.services.filter(s => s.name.includes('/udp'));
 
-          // Generate summary text
-          const summaryParts: string[] = [];
-          if (tcpServices.length > 0) {
-            summaryParts.push(`TCP(${tcpServices.length})`);
-          }
-          if (udpServices.length > 0) {
-            summaryParts.push(`UDP(${udpServices.length})`);
-          }
+            // Generate summary text
+            const summaryParts: string[] = [];
+            if (tcpServices.length > 0) {
+              summaryParts.push(`TCP(${tcpServices.length})`);
+            }
+            if (udpServices.length > 0) {
+              summaryParts.push(`UDP(${udpServices.length})`);
+            }
 
-          const summaryText = summaryParts.join(', ');
+            const summaryText = summaryParts.join(', ');
 
-          // Generate title
-          const title = host.hostname ? `${host.hostname} (${host.ip})` : host.ip;
+            // Generate title
+            const title = host.hostname ? `${host.hostname} (${host.ip})` : host.ip;
 
-          return (
-            <StyledCard
-              key={host.ip}
-              title={title}
-              subtitle={summaryText}
-              icon={<Icon name="devices" type="material" />}
-              variant="local"
-              defaultExpanded={!allCollapsed}
-            >
-              <CardContent>
-                <PortsList>
+            return (
+              <StyledCard
+                key={host.ip}
+                title={title}
+                subtitle={summaryText}
+                icon={<Icon name="devices" type="material" />}
+                variant="local"
+                defaultExpanded={!allCollapsed}
+              >
+                <CardContent>
+                  <PortsList>
                   {/* TCP Ports Section */}
                   {tcpServices.length > 0 && (
                     <PortSection>
@@ -335,12 +356,13 @@ const NetworkHostGroup: React.FC<NetworkHostGroupProps> = ({ name, services }) =
                       })}
                     </PortSection>
                   )}
-                </PortsList>
-              </CardContent>
-            </StyledCard>
-          );
-        })}
-      </HostsGrid>
+                  </PortsList>
+                </CardContent>
+              </StyledCard>
+            );
+          })}
+        </HostsGrid>
+      )}
     </Group>
   );
 };

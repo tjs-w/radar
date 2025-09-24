@@ -115,6 +115,9 @@ const ServicesGrid = styled.div`
 `;
 
 const ServiceGroup: React.FC<ServiceGroupProps> = ({ name, services }) => {
+  // State for section-level collapse
+  const [sectionCollapsed, setSectionCollapsed] = useState(false);
+
   // Use a single state variable to track whether all cards should be expanded
   const [allCollapsed, setAllCollapsed] = useState(true);
 
@@ -128,6 +131,11 @@ const ServiceGroup: React.FC<ServiceGroupProps> = ({ name, services }) => {
     setAllCollapsed(false);
   };
 
+  // Function to toggle section collapse
+  const handleSectionToggle = () => {
+    setSectionCollapsed(!sectionCollapsed);
+  };
+
   if (services.length === 0) {
     return null;
   }
@@ -136,6 +144,18 @@ const ServiceGroup: React.FC<ServiceGroupProps> = ({ name, services }) => {
     <Group>
       <Heading>
         <HeadingLeft>
+          <ActionButton
+            onClick={handleSectionToggle}
+            title={sectionCollapsed ? "Expand section" : "Collapse section"}
+            aria-label={sectionCollapsed ? "Expand section" : "Collapse section"}
+            type="button"
+          >
+            <Icon
+              name={sectionCollapsed ? "expand_more" : "expand_less"}
+              type="material"
+              size="sm"
+            />
+          </ActionButton>
           <GroupName>{name}</GroupName>
           <ServiceCount>{services.length}</ServiceCount>
         </HeadingLeft>
@@ -163,23 +183,29 @@ const ServiceGroup: React.FC<ServiceGroupProps> = ({ name, services }) => {
         </HeadingRight>
       </Heading>
 
-      <ServicesGrid>
-        {services.map(service => {
-          const key = `${service.name}-${service.address}-${service.port}-${service.service_type}`;
+      {!sectionCollapsed && (
+        <ServicesGrid>
+          {services.map(service => {
+            const key = `${service.name}-${service.address}-${service.port}-${service.service_type}`;
 
-          return (
-            <LocalNetworkCard
-              key={key}
-              service={service}
-              defaultExpanded={false}
-              forceExpanded={!allCollapsed}
-              onExpand={expanded => {
-                setAllCollapsed(!expanded);
-              }}
-            />
-          );
-        })}
-      </ServicesGrid>
+            return (
+              <LocalNetworkCard
+                key={key}
+                service={service}
+                defaultExpanded={false}
+                forceExpanded={!allCollapsed}
+                onExpand={expanded => {
+                  // Only update group state if a card is being expanded individually
+                  // (not when responding to group-level expand/collapse)
+                  if (expanded && allCollapsed) {
+                    setAllCollapsed(false);
+                  }
+                }}
+              />
+            );
+          })}
+        </ServicesGrid>
+      )}
     </Group>
   );
 };
