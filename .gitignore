@@ -47,6 +47,12 @@ CLAUDE.md
 .copilot/
 .codeium/
 .github/copilot/
+.serena/
+
+# Logs and temporary files
+logs/
+temp-*.json
+*.log
 
 # TypeScript
 *.tsbuildinfo
