@@ -19,20 +19,6 @@ const scan = keyframes`
   }
 `;
 
-const pulse = keyframes`
-  0% {
-    opacity: 0.5;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.1);
-  }
-  100% {
-    opacity: 0.5;
-    transform: scale(1);
-  }
-`;
 
 const radarSpin = keyframes`
   from {
@@ -153,25 +139,6 @@ const UnifiedIcon = styled(Icon)<{ $scanning: boolean }>`
     `}
 `;
 
-const UnifiedSpinner = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const UnifiedSpinnerInner = styled.div`
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  opacity: 0.03;
-  background-color: #ffffff;
-  animation: ${pulse} 1.5s infinite ease-in-out;
-`;
 
 const ScanButton: React.FC<ScanButtonProps> = ({
   onClick,
